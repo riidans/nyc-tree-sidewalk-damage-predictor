@@ -24,23 +24,24 @@ log_model = glm(sidewalk ~ tree_dbh + spc_common + health +
                   family = "binomial",
 )
 
-# TEST SPLIT RESULTS
+# DEV SPLIT RESULTS
+# Test set is reserved for final evaluation in 05_random_forest_final.R
 
-test_prob = predict(log_model, newdata = test_data, type = "response")
-test_pred = ifelse(test_prob > 0.5, 1, 0)
+dev_prob = predict(log_model, newdata = dev_data, type = "response")
+dev_pred = ifelse(dev_prob > 0.5, 1, 0)
 
-tp = sum(test_data$sidewalk == 1 & test_pred == 1)
-tn = sum(test_data$sidewalk == 0 & test_pred == 0)
-fp = sum(test_data$sidewalk == 0 & test_pred == 1)
-fn = sum(test_data$sidewalk == 1 & test_pred == 0)
+tp = sum(dev_data$sidewalk == 1 & dev_pred == 1)
+tn = sum(dev_data$sidewalk == 0 & dev_pred == 0)
+fp = sum(dev_data$sidewalk == 0 & dev_pred == 1)
+fn = sum(dev_data$sidewalk == 1 & dev_pred == 0)
 
 accuracy  = (tp + tn) / (tp + tn + fp + fn)
 precision = tp / (tp + fp)
 recall    = tp / (tp + fn)
 f1  = 2 * (precision * recall) / (precision + recall)
 
-cat("Logistic Regression (Baseline) Metrics \n", 
-"Accuracy: ", round(accuracy, 4), "\n", 
-"Precision:", round(precision, 4), "\n", 
-"Recall:   ", round(recall, 4), "\n", 
-"F1 Score: ", round(f1, 4), "\n")      
+cat("Logistic Regression (Baseline) Dev Metrics \n",
+"Accuracy: ", round(accuracy, 4), "\n",
+"Precision:", round(precision, 4), "\n",
+"Recall:   ", round(recall, 4), "\n",
+"F1 Score: ", round(f1, 4), "\n")
