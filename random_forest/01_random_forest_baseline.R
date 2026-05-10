@@ -31,25 +31,26 @@ rf_model = ranger(
   # change this to permutation for the feature importance graph, otherwise keep as none
 )
 
-# RANDOM FOREST MODEL METRICS ON TEST SET
+# RANDOM FOREST MODEL METRICS ON DEV SET
+# Test set is reserved for final evaluation in 05_random_forest_final.R
 
-test_prob = predict(rf_model, data = test_data)$predictions[, "1"]
-test_pred = ifelse(test_prob > 0.5, 1, 0)
+dev_prob = predict(rf_model, data = dev_data)$predictions[, "1"]
+dev_pred = ifelse(dev_prob > 0.5, 1, 0)
 
-tp = sum(test_data$sidewalk == 1 & test_pred == 1)
-tn = sum(test_data$sidewalk == 0 & test_pred == 0)
-fp = sum(test_data$sidewalk == 0 & test_pred == 1)
-fn = sum(test_data$sidewalk == 1 & test_pred == 0)
+tp = sum(dev_data$sidewalk == 1 & dev_pred == 1)
+tn = sum(dev_data$sidewalk == 0 & dev_pred == 0)
+fp = sum(dev_data$sidewalk == 0 & dev_pred == 1)
+fn = sum(dev_data$sidewalk == 1 & dev_pred == 0)
 
 accuracy  = (tp + tn) / (tp + tn + fp + fn)
 precision = tp / (tp + fp)
 recall    = tp / (tp + fn)
 f1  = 2 * precision * recall / (precision + recall)
 
-cat("Random Forest (Baseline) Metrics \n", 
-"Accuracy: ", round(accuracy, 4), "\n", 
-"Precision:", round(precision, 4), "\n", 
-"Recall:   ", round(recall, 4), "\n", 
-"F1 Score: ", round(f1, 4), "\n")      
+cat("Random Forest (Baseline) Dev Metrics \n",
+"Accuracy: ", round(accuracy, 4), "\n",
+"Precision:", round(precision, 4), "\n",
+"Recall:   ", round(recall, 4), "\n",
+"F1 Score: ", round(f1, 4), "\n")
 
 
