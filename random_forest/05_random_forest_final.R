@@ -24,15 +24,14 @@ class_dist = table(train_data$sidewalk)
 class_weights = c("0" = 1, "1" = as.numeric(class_dist[1] / class_dist[2]))
 
 rf_model = ranger(
+  # Leakage-reduced formula: drops the 9 root/trunk/branch inspector flags,
+  # which are arguably co-observations of damage rather than predictors.
   formula = sidewalk ~ tree_dbh + spc_common + health +
-            root_stone + root_grate + root_other +
-            trunk_wire + trnk_light + trnk_other +
-            brch_light + brch_shoe + brch_other +
             borough + curb_loc + nta_name + steward +
             latitude + longitude,
   data = train_data,
-  mtry = 12, # Taken from 04_random_forest_tuning
-  min.node.size = 15, # Taken from 04_random_forest_tuning
+  # mtry/min.node.size left at ranger defaults; original tuning was on the
+  # larger feature set so values do not transfer cleanly.
   num.trees = 500,
   probability = TRUE,
   case.weights = ifelse(train_data$sidewalk == "1", class_weights["1"], class_weights["0"]),
