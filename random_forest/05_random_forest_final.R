@@ -1,6 +1,6 @@
 library(rstudioapi)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-tree_data = readRDS("../MTH4330/cleaned_tree_data.rds")
+tree_data = readRDS("../cleaned_tree_data.rds")
 
 library(ranger)
 tree_data$sidewalk = as.factor(tree_data$sidewalk)
@@ -26,12 +26,12 @@ class_weights = c("0" = 1, "1" = as.numeric(class_dist[1] / class_dist[2]))
 rf_model = ranger(
   # Leakage-reduced formula: drops the 9 root/trunk/branch inspector flags,
   # which are arguably co-observations of damage rather than predictors.
-  formula = sidewalk ~ tree_dbh + spc_common + health +
+  formula = sidewalk ~ tree_dbh + spc_common + health + root_stone + 
             borough + curb_loc + nta_name + steward +
             latitude + longitude,
   data = train_data,
-  # mtry/min.node.size left at ranger defaults; original tuning was on the
-  # larger feature set so values do not transfer cleanly.
+  mtry = 6,
+  min_node_size = 5,
   num.trees = 500,
   probability = TRUE,
   case.weights = ifelse(train_data$sidewalk == "1", class_weights["1"], class_weights["0"]),
@@ -110,3 +110,4 @@ cat("Random Forest + Optimized Threshold for F2 (", optimal_threshold_f2, ")\n",
 "Recall:   ", round(recall, 4), "\n", 
 "F1 Score: ", round(f1, 4), "\n",
 "F2 Score: ", round(f2, 4), "\n")  
+

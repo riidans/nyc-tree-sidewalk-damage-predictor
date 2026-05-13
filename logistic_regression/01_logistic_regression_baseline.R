@@ -1,6 +1,6 @@
 library(rstudioapi)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-tree_data = readRDS("cleaned_tree_data.rds") 
+tree_data = readRDS("../cleaned_tree_data.rds") 
 
 # DATA SPLIT
 # 80 train / 10 dev / 10 test
@@ -38,10 +38,12 @@ fn = sum(dev_data$sidewalk == 1 & dev_pred == 0)
 accuracy  = (tp + tn) / (tp + tn + fp + fn)
 precision = tp / (tp + fp)
 recall    = tp / (tp + fn)
-f1  = 2 * (precision * recall) / (precision + recall)
+f1 = 2 * (precision * recall) / (precision + recall)
+f2 = 5 * (precision * recall) / ((4 * precision) + recall)
 
 cat("Logistic Regression (Baseline) Dev Metrics \n",
 "Accuracy: ", round(accuracy, 4), "\n",
 "Precision:", round(precision, 4), "\n",
 "Recall:   ", round(recall, 4), "\n",
-"F1 Score: ", round(f1, 4), "\n")
+"F1 Score: ", round(f1, 4), "\n",
+"F2 Score: ", round(f2, 4), "\n")
