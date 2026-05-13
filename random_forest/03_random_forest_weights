@@ -25,9 +25,9 @@ class_weights = c("0" = 1, "1" = as.numeric(class_dist[1] / class_dist[2]))
 
 rf_model = ranger(
   formula = sidewalk ~ tree_dbh + spc_common + health +
-            root_stone + root_grate + root_other +
-            trunk_wire + trnk_light + trnk_other +
-            brch_light + brch_shoe + brch_other +
+            root_stone + # root_grate + root_other +
+            # trunk_wire + trnk_light + trnk_other +
+            # brch_light + brch_shoe + brch_other +
             borough + curb_loc + nta_name + steward +
             latitude + longitude,
   data = train_data,
@@ -41,7 +41,7 @@ rf_model = ranger(
 # THRESHOLD OPTIMIZIATION ON DEV SET
 # Loops through each threshold, and calculates metrics for each 
 
-ddev_prob = predict(rf_model, data = dev_data)$predictions[, "1"]
+dev_prob = predict(rf_model, data = dev_data)$predictions[, "1"]
 
 metrics_table = data.frame()
 
