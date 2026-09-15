@@ -1,6 +1,6 @@
 library(rstudioapi)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-tree_data = readRDS("./data_cleaned.rds")
+tree_data = readRDS("./cleaned_tree_data.rds")
 
 library(ranger)
 tree_data$sidewalk = as.factor(tree_data$sidewalk)
